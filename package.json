@@ -1,0 +1,22 @@
+{
+  "name": "moviemuse-server",
+  "version": "0.1.0",
+  "description": "My capstone project of BrainStation SE bootcamp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --watch index.js"
+  },
+  "keywords": [
+    "express",
+    "database",
+    "api"
+  ],
+  "author": "Jingwei Zhao",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2"
+  }
+}
