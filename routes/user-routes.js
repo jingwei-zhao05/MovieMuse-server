@@ -2,7 +2,6 @@ const router = require("express").Router();
 const userController = require("../controllers/user-controller");
 const { validateUser } = require("../middleware/user-validator");
 const { authorize } = require("../middleware/authorize");
-const jwt = require("jsonwebtoken");
 
 router
   .route("/")
