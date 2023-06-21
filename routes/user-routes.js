@@ -8,6 +8,8 @@ router
   .get(userController.getUsers)
   .post(validateUser, userController.createUser);
 
+router.route("/:id").get(userController.getUserFavouriteMovies);
+
 router.route("/login").post(userController.login);
 
 router.route("/select-movies").get(authorize, userController.selectMovies);

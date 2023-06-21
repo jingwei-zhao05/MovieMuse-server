@@ -30,6 +30,27 @@ const createUser = (req, res) => {
     });
 };
 
+const getUserFavouriteMovies = (req, res) => {
+  knex("usersFavouriteMovies")
+    .join("users", "users.id", "usersFavouriteMovies.userId")
+    .join("movies", "movies.id", " usersFavouriteMovies.movieId")
+    .select("*")
+    .where({ userId: req.params.id })
+    .then((joined) => {
+      if (joined.length === 0) {
+        return res.status(404).json({
+          message: `User with ID: ${req.params.id} not found`,
+        });
+      }
+      res.status(200).json(joined);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: `Unable to retrieve data. Error: ${err}`,
+      });
+    });
+};
+
 const login = (req, res) => {
   const { email, password } = req.body;
 
@@ -60,7 +81,7 @@ const login = (req, res) => {
       }
 
       const token = jwt.sign(
-        { userName: user.user_name },
+        { userName: user.user_name, userId: user.id },
         process.env.SECRET_KEY,
         {
           expiresIn: 60 * 60 * 24,
@@ -72,7 +93,7 @@ const login = (req, res) => {
 };
 
 const selectMovies = (req, res) => {
-  res.json(req.userName);
+  res.json(req.decoded);
 };
 
 module.exports = {
@@ -80,4 +101,5 @@ module.exports = {
   createUser,
   login,
   selectMovies,
+  getUserFavouriteMovies,
 };
