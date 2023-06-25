@@ -28,6 +28,25 @@ const postFavMovies = (req, res) => {
     });
 };
 
+const deleteFavMovies = (req, res) => {
+  knex("usersFavouriteMovies")
+    .where({ movie_id: req.params.movieId, user_id: req.params.id })
+    .del()
+    .then((result) => {
+      if (result === 0) {
+        return res.status(400).json({
+          message: `User with ID: ${req.params.id} not found or movie with ID: ${req.params.movieId} to be deleted not found.`,
+        });
+      }
+
+      // no content response
+      res.status(204).send();
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Unable to delete movie" });
+    });
+};
+
 const getWatchlist = (req, res) => {
   knex("usersWatchlist")
     .where({ user_id: req.params.id })
@@ -59,9 +78,30 @@ const postWatchlist = (req, res) => {
     });
 };
 
+const deleteWatchlist = (req, res) => {
+  knex("usersWatchlist")
+    .where({ movie_id: req.params.movieId, user_id: req.params.id })
+    .del()
+    .then((result) => {
+      if (result === 0) {
+        return res.status(400).json({
+          message: `User with ID: ${req.params.id} not found or movie with ID: ${req.params.movieId} to be deleted not found.`,
+        });
+      }
+
+      // no content response
+      res.status(204).send();
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Unable to delete movie" });
+    });
+};
+
 module.exports = {
   getMovies,
   postFavMovies,
   getWatchlist,
   postWatchlist,
+  deleteFavMovies,
+  deleteWatchlist,
 };
