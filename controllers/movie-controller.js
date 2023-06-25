@@ -12,8 +12,7 @@ const getMovies = (_req, res) => {
 const postMovies = (req, res) => {
   knex("usersFavouriteMovies")
     .insert({
-      userId: req.body.userId,
-      movieId: req.body.movieId,
+      user_id: req.body.user_id,
       movie_id: req.body.movie_id,
     })
     .then((result) => {

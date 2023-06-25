@@ -5,11 +5,11 @@
 exports.up = function (knex) {
   return knex.schema.createTable("usersFavouriteMovies", function (table) {
     table.increments("id").primary();
-    table.integer("userId").unsigned().notNullable();
-    table.integer("movieId").unsigned().notNullable();
+    table.integer("user_id").unsigned().notNullable();
+    // table.integer("movieId").unsigned().notNullable();
     table.integer("movie_id").notNullable();
-    table.foreign("userId").references("id").inTable("users");
-    table.foreign("movieId").references("id").inTable("movies");
+    table.foreign("user_id").references("id").inTable("users");
+    // table.foreign("movieId").references("id").inTable("movies");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table
       .timestamp("updated_at")

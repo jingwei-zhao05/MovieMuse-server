@@ -32,10 +32,10 @@ const createUser = (req, res) => {
 
 const getUserFavouriteMovies = (req, res) => {
   knex("usersFavouriteMovies")
-    .join("users", "users.id", "usersFavouriteMovies.userId")
-    .join("movies", "movies.id", " usersFavouriteMovies.movieId")
+    .join("users", "users.id", "usersFavouriteMovies.user_id")
+    // .join("movies", "movies.movie_id", " usersFavouriteMovies.movie_id")
     .select("*")
-    .where({ userId: req.params.id })
+    .where({ user_id: req.params.id })
     .then((joined) => {
       if (joined.length === 0) {
         return res.status(404).json({

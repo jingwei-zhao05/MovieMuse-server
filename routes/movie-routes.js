@@ -6,6 +6,6 @@ const { authorize } = require("../middleware/authorize");
 router
   .route("/")
   .get(movieController.getMovies)
-  .post(movieController.postMovies);
+  .post(validateMovie, movieController.postMovies);
 
 module.exports = router;
