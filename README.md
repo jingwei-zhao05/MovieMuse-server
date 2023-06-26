@@ -22,8 +22,8 @@ MovieMuse offers a diverse range of movie options, including now showing, upcomi
 3.Install dependencies:
 
 ```bash
-  npm install 
   cd moviemuse-server
+  npm install 
 ```
 
 4.Run migrations
