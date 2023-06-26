@@ -81,7 +81,7 @@ const login = (req, res) => {
 
       const user = users[0];
 
-      const validPassword = bcrypt.compare(password, user.password);
+      const validPassword = bcrypt.compareSync(password, user.password);
       if (!validPassword) {
         return res.status(401).json({
           message: "Invalid credentials",
