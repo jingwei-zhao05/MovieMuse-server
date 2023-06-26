@@ -11,29 +11,38 @@ const getUsers = (_req, res) => {
 };
 
 const createUser = (req, res) => {
-  knex("users")
-    .insert({
-      user_name: req.body.user_name,
-      email: req.body.email,
-      password: req.body.password,
-    })
-    .then((result) => {
-      return knex("users").where({ id: result[0] });
-    })
-    .then((createdUser) => {
-      res.status(201).json(createdUser);
-    })
-    .catch((error) => {
-      res.status(500).json({
-        message: `Unable to create user. Error: ${error}`,
+  const { user_name, email, password } = req.body;
+
+  //use bcrypt to hash password
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    if (err) {
+      return res.status(500).json({
+        message: "Error hashing password",
       });
-    });
+    }
+    knex("users")
+      .insert({
+        user_name: user_name,
+        email: email,
+        password: hashedPassword,
+      })
+      .then((result) => {
+        return knex("users").where({ id: result[0] });
+      })
+      .then((createdUser) => {
+        res.status(201).json(createdUser);
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message: `Unable to create user. Error: ${error}`,
+        });
+      });
+  });
 };
 
 const getUserFavouriteMovies = (req, res) => {
   knex("usersFavouriteMovies")
     .join("users", "users.id", "usersFavouriteMovies.user_id")
-    // .join("movies", "movies.movie_id", " usersFavouriteMovies.movie_id")
     .select("*")
     .where({ user_id: req.params.id })
     .then((joined) => {
@@ -48,25 +57,6 @@ const getUserFavouriteMovies = (req, res) => {
       res.status(500).json({
         message: `Unable to retrieve data. Error: ${err}`,
       });
-    });
-};
-
-const deleteFavMovies = (req, res) => {
-  knex("usersFavouriteMovies")
-    .where({ movie_id: req.params.movieId, user_id: req.params.id })
-    .del()
-    .then((result) => {
-      if (result === 0) {
-        return res.status(400).json({
-          message: `Movie with ID: ${req.params.movie_id} to be deleted not found.`,
-        });
-      }
-
-      // no content response
-      res.status(204).send();
-    })
-    .catch(() => {
-      res.status(500).json({ message: "Unable to delete movie" });
     });
 };
 
@@ -91,8 +81,7 @@ const login = (req, res) => {
 
       const user = users[0];
 
-      // const validPassword = bcrypt.compareSync(password, user.password);
-      const validPassword = password === user.password;
+      const validPassword = bcrypt.compare(password, user.password);
       if (!validPassword) {
         return res.status(401).json({
           message: "Invalid credentials",
@@ -121,5 +110,4 @@ module.exports = {
   login,
   selectMovies,
   getUserFavouriteMovies,
-  deleteFavMovies,
 };
